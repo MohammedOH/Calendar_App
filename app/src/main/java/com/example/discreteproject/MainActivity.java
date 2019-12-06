@@ -40,12 +40,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Toast.makeText(this, "Please fill all fields!", Toast.LENGTH_LONG).show();
             return;
         }
-        // Checks values
-        if (!validYear(year) || !validMonth(month))
-            return;
         // Parsing after Checking
         int yearValue = Integer.parseInt(year);
         int monthValue = Integer.parseInt(month);
+        // Checks values
+        if (!validYear(yearValue) || !validMonth(monthValue))
+            return;
         // Start new Activity with the final data
         Intent intent = new Intent(this, CalenderActivity.class);
         intent.putExtra("year", yearValue);
@@ -56,45 +56,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         monthTextInputLayout.getEditText().setText(null);
     }
 
-    private boolean validYear(String year) {
-        boolean isValid = true;
-        // Checking containing characters
-        for (int i = 0; i < year.length(); i++) {
-            if (!Character.isDigit(year.charAt(i))) {
-                isValid = false;
-                yearTextInputLayout.setError("Only digits allowed!");
-            }
-        }
+    private boolean validYear(int year) {
         // Checking years value
-        if (isValid) {
-            if (Integer.parseInt(year) < 1800) {
-                yearTextInputLayout.setError("Please Enter a year > 1800!");
-                return false;
-            }
-            yearTextInputLayout.setError(null);
+        if (year < 1800) {
+            yearTextInputLayout.setError("Please Enter a year > 1800!");
+            return false;
         }
-        return isValid;
+        yearTextInputLayout.setError(null);
+        return true;
     }
 
-    private boolean validMonth(String month) {
-        boolean isValid = true;
-        // Checking containing characters
-        for (int i = 0; i < month.length(); i++) {
-            if (!Character.isDigit(month.charAt(i))) {
-                isValid = false;
-                monthTextInputLayout.setError("Only digits allowed!");
-            }
-        }
+    private boolean validMonth(int month) {
         // Checking months value
-        if (isValid) {
-            int monthValue = Integer.parseInt(month);
-            if (monthValue < 1 || monthValue > 12) {
-                yearTextInputLayout.setError("Not a month!");
-                return false;
-            }
-            yearTextInputLayout.setError(null);
+        if (month < 1 || month > 12) {
+            yearTextInputLayout.setError("Not a month!");
+            return false;
         }
-        return isValid;
+        yearTextInputLayout.setError(null);
+        return true;
     }
 
     @Override
