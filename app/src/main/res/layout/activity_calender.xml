@@ -6,6 +6,7 @@
     android:layout_height="match_parent">
 
     <TableLayout
+        android:id="@+id/tableLayout2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_row="6"
@@ -653,4 +654,14 @@
         </TableRow>
 
     </TableLayout>
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:text="title"
+        app:layout_constraintBottom_toTopOf="@+id/tableLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
