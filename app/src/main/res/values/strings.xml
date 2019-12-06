@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Discrete Project</string>
+    <string name="year">Year</string>
+    <string name="month">Month</string>
+    <string name="show_calender">Show Calender</string>
+    <string name="sun">Sun</string>
+    <string name="mon">Mon</string>
+    <string name="tu">Tu</string>
+    <string name="we">We</string>
+    <string name="th">Th</string>
+    <string name="fr">Fr</string>
+    <string name="sa">Sa</string>
+</resources>
