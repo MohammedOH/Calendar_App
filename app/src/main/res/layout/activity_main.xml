@@ -23,6 +23,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+			android:inputType="number"
             android:lines="1"
             android:maxLength="4"
             android:textSize="30sp" />
@@ -45,6 +46,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+	        android:inputType="number"
             android:lines="1"
             android:maxLength="2"
             android:textSize="30sp" />
