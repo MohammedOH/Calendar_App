@@ -4,11 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class CalenderActivity extends AppCompatActivity {
 
-    private TextView[][] tableUI;
+    private TextView[][] tableUI; int year;int month;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,8 +19,8 @@ public class CalenderActivity extends AppCompatActivity {
         setContentView(R.layout.activity_calender);
         // Getting data from intent
         Intent intent = getIntent();
-        int year = intent.getIntExtra("year", 2019);
-        int month = intent.getIntExtra("month", 1);
+        year = intent.getIntExtra("year", 2019);
+        month = intent.getIntExtra("month", 1);
         // Inflating items
         inflateItems();
         // Getting results table
@@ -26,6 +29,50 @@ public class CalenderActivity extends AppCompatActivity {
         setResultToUI(calenderTable);
 
         ((TextView)findViewById(R.id.title)).setText(year + "  " + getMonthName(month));
+
+        Button nextButton = findViewById(R.id.next);
+
+        nextButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                if ( month == 12) {
+                    year++;
+                    month = 1;
+                }else {
+                    month++;
+                }
+                Toast.makeText(CalenderActivity.this, "next month", Toast.LENGTH_SHORT).show();
+                inflateItems();
+                // Getting results table
+                int[][] calenderTable = getTableOfMonth(year, month);
+
+                setResultToUI(calenderTable);
+
+                ((TextView)findViewById(R.id.title)).setText(year + "  " + getMonthName(month));
+            }
+        });
+
+        Button prevButton = findViewById(R.id.prev);
+
+        prevButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){;
+                if ( month == 1) {
+                    year--;
+                    month = 12;
+                }else {
+                    month--;
+                }
+                Toast.makeText(CalenderActivity.this, "prev month", Toast.LENGTH_SHORT).show();
+                inflateItems();
+                // Getting results table
+                int[][] calenderTable = getTableOfMonth(year, month);
+
+                setResultToUI(calenderTable);
+
+                ((TextView)findViewById(R.id.title)).setText(year + "  " + getMonthName(month));
+            }
+        });
 
     }
 
@@ -136,6 +183,9 @@ public class CalenderActivity extends AppCompatActivity {
             for (int j = 0; j < tableUI[0].length; j++) {
                 if (calenderTable[i][j] != 0)
                     tableUI[i][j].setText(String.valueOf(calenderTable[i][j]));
+                else {
+                    tableUI[i][j].setText("");
+                }
             }
         }
     }
