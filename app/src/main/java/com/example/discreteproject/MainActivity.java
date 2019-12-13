@@ -69,10 +69,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean validMonth(int month) {
         // Checking months value
         if (month < 1 || month > 12) {
-            yearTextInputLayout.setError("Not a month!");
+            monthTextInputLayout.setError("Not a month!");
             return false;
         }
-        yearTextInputLayout.setError(null);
+        monthTextInputLayout.setError(null);
         return true;
     }
 
