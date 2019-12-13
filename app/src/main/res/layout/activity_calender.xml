@@ -98,7 +98,7 @@
                 android:background="#F5F5F5"
                 android:gravity="center"
                 android:text="@string/sa"
-                android:textColor="#707070"
+                android:textColor="#FFFFFF"
                 android:textSize="20sp" />
 
         </TableRow>
