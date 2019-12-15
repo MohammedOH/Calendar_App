@@ -11,13 +11,14 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class CalenderActivity extends AppCompatActivity {
+public class CalenderActivity extends AppCompatActivity implements View.OnLongClickListener {
 
     private TextView title;
     private TextView[][] tableUI;
     private int year;
     private int month;
     private String[] months;
+    private Button nextButton, prevButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +32,9 @@ public class CalenderActivity extends AppCompatActivity {
         month = intent.getIntExtra("month", 1);
         // Show final result
         setResult(year, month);
+        // Listeners setting
+        nextButton.setOnLongClickListener(this);
+        prevButton.setOnLongClickListener(this);
     }
 
     private void inflateItems() {
@@ -85,6 +89,8 @@ public class CalenderActivity extends AppCompatActivity {
 
         months = getResources().getStringArray(R.array.months);
         title = findViewById(R.id.title);
+        nextButton = findViewById(R.id.next);
+        prevButton = findViewById(R.id.prev);
     }
 
     private int[][] getTableOfMonth(int year, int month) {
@@ -157,7 +163,7 @@ public class CalenderActivity extends AppCompatActivity {
         } else {
             month++;
         }
-        Toast.makeText(CalenderActivity.this, getResources().getText(R.string.next_month), Toast.LENGTH_SHORT).show();
+        Toast.makeText(CalenderActivity.this, R.string.next_month, Toast.LENGTH_SHORT).show();
         // Show final result
         setResult(year, month);
     }
@@ -169,14 +175,12 @@ public class CalenderActivity extends AppCompatActivity {
         } else {
             month--;
         }
-        Toast.makeText(CalenderActivity.this, getResources().getText(R.string.prev_month), Toast.LENGTH_SHORT).show();
+        Toast.makeText(CalenderActivity.this, R.string.prev_month, Toast.LENGTH_SHORT).show();
         // Show final result
         setResult(year, month);
     }
 
-    /**
-     * Get the English name for the month
-     */
+    /* Get the English name for the month */
     public String getMonthName(int month) {
         return months[month - 1];
     }
@@ -185,6 +189,7 @@ public class CalenderActivity extends AppCompatActivity {
         setResultToUI(getTableOfMonth(year, month));
         title.setText(String.format("%d %s", year, getMonthName(month)));
     }
+
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
@@ -199,6 +204,19 @@ public class CalenderActivity extends AppCompatActivity {
         year = (int) savedInstanceState.get("year");
         month = (int) savedInstanceState.get("month");
         setResult(year, month);
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        switch (v.getId()) {
+            case R.id.next:
+                Toast.makeText(CalenderActivity.this, R.string.next_month, Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.prev:
+                Toast.makeText(CalenderActivity.this, R.string.prev_month, Toast.LENGTH_SHORT).show();
+                return true;
+        }
+        return false;
     }
 
 }
