@@ -37,14 +37,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String month = monthTextInputLayout.getEditText().getText().toString().trim();
         // Edge case: Empty fields
         if (year.isEmpty() || month.isEmpty()) {
-            Toast.makeText(this, "Please fill all fields!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.fill_fields, Toast.LENGTH_LONG).show();
             return;
         }
         // Parsing after Checking
         int yearValue = Integer.parseInt(year);
         int monthValue = Integer.parseInt(month);
         // Checks values
-        if (!validYear(yearValue) || !validMonth(monthValue))
+        boolean validYear = validYear(yearValue), validMonth = validMonth(monthValue);
+        if (!validYear || !validMonth)
             return;
         // Start new Activity with the final data
         Intent intent = new Intent(this, CalenderActivity.class);
@@ -59,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean validYear(int year) {
         // Checking years value
         if (year < 1800) {
-            yearTextInputLayout.setError("Please Enter a year > 1800!");
+            yearTextInputLayout.setError(getResources().getText(R.string.invalid_year));
             return false;
         }
         yearTextInputLayout.setError(null);
@@ -69,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean validMonth(int month) {
         // Checking months value
         if (month < 1 || month > 12) {
-            monthTextInputLayout.setError("Not a month!");
+            monthTextInputLayout.setError(getResources().getText(R.string.not_month));
             return false;
         }
         monthTextInputLayout.setError(null);

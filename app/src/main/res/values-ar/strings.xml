@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">مشروع الدسكريت</string>
+    <string name="year">سنة</string>
+    <string name="month">شهر</string>
+    <string name="show_calender">اظهار التقوريم</string>
+    <string name="sun">أ</string>
+    <string name="mon">إث</string>
+    <string name="tu">ث</string>
+    <string name="we">أر</string>
+    <string name="th">خ</string>
+    <string name="fr">ج</string>
+    <string name="sa">س</string>
+    <string name="next_month">الشهر التالي</string>
+    <string name="prev_month">الشهر السابق</string>
+    <string name="not_month">الشهر غير صحيح!</string>
+    <string name="invalid_year"><![CDATA[أدخل سنة > 1800!]]></string>
+    <string name="fill_fields">يرجى تعبئة الحقول</string>
+
+    <string-array name="months">
+        <item>يناير</item>
+        <item>فبراير</item>
+        <item>مارس</item>
+        <item>أبريل</item>
+        <item>مايو</item>
+        <item>يونيو</item>
+        <item>يوليو</item>
+        <item>أغسطس</item>
+        <item>سبتمبر</item>
+        <item>أكتوبر</item>
+        <item>نوفمبر</item>
+        <item>ديسمبر</item>
+    </string-array>
+</resources>

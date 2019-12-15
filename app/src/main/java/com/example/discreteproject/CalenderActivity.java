@@ -1,8 +1,10 @@
 package com.example.discreteproject;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,69 +13,24 @@ import android.widget.Toast;
 
 public class CalenderActivity extends AppCompatActivity {
 
-    private TextView[][] tableUI; int year;int month;
+    private TextView title;
+    private TextView[][] tableUI;
+    private int year;
+    private int month;
+    private String[] months;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calender);
+        // Inflating items
+        inflateItems();
         // Getting data from intent
         Intent intent = getIntent();
         year = intent.getIntExtra("year", 2019);
         month = intent.getIntExtra("month", 1);
-        // Inflating items
-        inflateItems();
-        // Getting results table
-        int[][] calenderTable = getTableOfMonth(year, month);
-
-        setResultToUI(calenderTable);
-
-        ((TextView)findViewById(R.id.title)).setText(year + "  " + getMonthName(month));
-
-        Button nextButton = findViewById(R.id.next);
-
-        nextButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                if ( month == 12) {
-                    year++;
-                    month = 1;
-                }else {
-                    month++;
-                }
-                Toast.makeText(CalenderActivity.this, "next month", Toast.LENGTH_SHORT).show();
-                inflateItems();
-                // Getting results table
-                int[][] calenderTable = getTableOfMonth(year, month);
-
-                setResultToUI(calenderTable);
-
-                ((TextView)findViewById(R.id.title)).setText(year + "  " + getMonthName(month));
-            }
-        });
-
-        Button prevButton = findViewById(R.id.prev);
-
-        prevButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){;
-                if ( month == 1) {
-                    year--;
-                    month = 12;
-                }else {
-                    month--;
-                }
-                Toast.makeText(CalenderActivity.this, "prev month", Toast.LENGTH_SHORT).show();
-                inflateItems();
-                // Getting results table
-                int[][] calenderTable = getTableOfMonth(year, month);
-
-                setResultToUI(calenderTable);
-
-                ((TextView)findViewById(R.id.title)).setText(year + "  " + getMonthName(month));
-            }
-        });
-
+        // Show final result
+        setResult(year, month);
     }
 
     private void inflateItems() {
@@ -125,6 +82,9 @@ public class CalenderActivity extends AppCompatActivity {
         tableUI[5][4] = findViewById(R.id._40);
         tableUI[5][5] = findViewById(R.id._41);
         tableUI[5][6] = findViewById(R.id._42);
+
+        months = getResources().getStringArray(R.array.months);
+        title = findViewById(R.id.title);
     }
 
     private int[][] getTableOfMonth(int year, int month) {
@@ -190,23 +150,55 @@ public class CalenderActivity extends AppCompatActivity {
         }
     }
 
-    /** Get the English name for the month */
-    public String getMonthName(int month) {
-        String monthName = "";
-        switch (month) {
-            case 1: monthName = "January"; break;
-            case 2: monthName = "February"; break;
-            case 3: monthName = "March"; break;
-            case 4: monthName = "April"; break;
-            case 5: monthName = "May"; break;
-            case 6: monthName = "June"; break;
-            case 7: monthName = "July"; break;
-            case 8: monthName = "August"; break;
-            case 9: monthName = "September"; break;
-            case 10: monthName = "October"; break;
-            case 11: monthName = "November"; break;
-            case 12: monthName = "December";
+    public void nextMonth(View view) {
+        if (month == 12) {
+            year++;
+            month = 1;
+        } else {
+            month++;
         }
-        return monthName;
+        Toast.makeText(CalenderActivity.this, getResources().getText(R.string.next_month), Toast.LENGTH_SHORT).show();
+        // Show final result
+        setResult(year, month);
     }
+
+    public void prevMonth(View view) {
+        if (month == 1) {
+            year--;
+            month = 12;
+        } else {
+            month--;
+        }
+        Toast.makeText(CalenderActivity.this, getResources().getText(R.string.prev_month), Toast.LENGTH_SHORT).show();
+        // Show final result
+        setResult(year, month);
+    }
+
+    /**
+     * Get the English name for the month
+     */
+    public String getMonthName(int month) {
+        return months[month - 1];
+    }
+
+    public void setResult(int year, int month) {
+        setResultToUI(getTableOfMonth(year, month));
+        title.setText(String.format("%d %s", year, getMonthName(month)));
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("year", year);
+        outState.putInt("month", month);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        year = (int) savedInstanceState.get("year");
+        month = (int) savedInstanceState.get("month");
+        setResult(year, month);
+    }
+
 }
