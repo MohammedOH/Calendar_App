@@ -1,24 +1,27 @@
 package com.example.discreteproject;
 
+import android.content.Intent;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
-public class CalenderActivity extends AppCompatActivity implements View.OnLongClickListener {
+public class CalenderActivity extends AppCompatActivity {
 
     private TextView title;
     private TextView[][] tableUI;
     private int year;
     private int month;
     private String[] months;
-    private Button nextButton, prevButton;
+    private OnSwipeTouchListener onSwipeTouchListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,9 +35,9 @@ public class CalenderActivity extends AppCompatActivity implements View.OnLongCl
         month = intent.getIntExtra("month", 1);
         // Show final result
         setResult(year, month);
-        // Listeners setting
-        nextButton.setOnLongClickListener(this);
-        prevButton.setOnLongClickListener(this);
+
+        findViewById(R.id.calender_table_layout).setOnTouchListener(onSwipeTouchListener);
+        findViewById(R.id.activity).setOnTouchListener(onSwipeTouchListener);
     }
 
     private void inflateItems() {
@@ -89,8 +92,36 @@ public class CalenderActivity extends AppCompatActivity implements View.OnLongCl
 
         months = getResources().getStringArray(R.array.months);
         title = findViewById(R.id.title);
-        nextButton = findViewById(R.id.next);
-        prevButton = findViewById(R.id.prev);
+        onSwipeTouchListener = new OnSwipeTouchListener(this) {
+            @Override
+            public void onSwipeTop() {
+            }
+
+            @Override
+            public void onSwipeRight() {
+                boolean isRTL = TextUtils.getLayoutDirectionFromLocale(Locale.getDefault()) == View.LAYOUT_DIRECTION_LTR;
+                if (isRTL) {
+                    setPrevMonth();
+                } else {
+                    setNextMonth();
+                }
+            }
+
+            @Override
+            public void onSwipeLeft() {
+                boolean isRTL = TextUtils.getLayoutDirectionFromLocale(Locale.getDefault()) == View.LAYOUT_DIRECTION_LTR;
+                if (isRTL) {
+                    setNextMonth();
+                } else {
+                    setPrevMonth();
+                }
+            }
+
+            @Override
+            public void onSwipeBottom() {
+            }
+
+        };
     }
 
     private int[][] getTableOfMonth(int year, int month) {
@@ -145,37 +176,44 @@ public class CalenderActivity extends AppCompatActivity implements View.OnLongCl
     }
 
     private void setResultToUI(int[][] calenderTable) {
+        int currentYear = Integer.parseInt(new SimpleDateFormat("yyyy").format(new Date()));
+        int currentMonth = Integer.parseInt(new SimpleDateFormat("MM").format(new Date()));
+        int currentDay = Integer.parseInt(new SimpleDateFormat("dd").format(new Date()));
+
         for (int i = 0; i < tableUI.length; i++) {
             for (int j = 0; j < tableUI[0].length; j++) {
-                if (calenderTable[i][j] != 0)
+                if (calenderTable[i][j] != 0) {
+                    if (currentYear == year && currentMonth == month && currentDay == calenderTable[i][j]) {
+                        tableUI[i][j].setBackgroundColor(Color.parseColor("#A6ECF5"));
+                    } else {
+                        tableUI[i][j].setBackground(null);
+                    }
                     tableUI[i][j].setText(String.valueOf(calenderTable[i][j]));
-                else {
+                } else {
                     tableUI[i][j].setText("");
                 }
             }
         }
     }
 
-    public void nextMonth(View view) {
+    private void setNextMonth() {
         if (month == 12) {
             year++;
             month = 1;
         } else {
             month++;
         }
-        Toast.makeText(CalenderActivity.this, R.string.next_month, Toast.LENGTH_SHORT).show();
         // Show final result
         setResult(year, month);
     }
 
-    public void prevMonth(View view) {
+    private void setPrevMonth() {
         if (month == 1) {
             year--;
             month = 12;
         } else {
             month--;
         }
-        Toast.makeText(CalenderActivity.this, R.string.prev_month, Toast.LENGTH_SHORT).show();
         // Show final result
         setResult(year, month);
     }
@@ -187,9 +225,8 @@ public class CalenderActivity extends AppCompatActivity implements View.OnLongCl
 
     public void setResult(int year, int month) {
         setResultToUI(getTableOfMonth(year, month));
-        title.setText(String.format("%d %s", year, getMonthName(month)));
+        title.setText(String.format(getResources().getString(R.string.date_format), year, getMonthName(month)));
     }
-
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
@@ -204,19 +241,6 @@ public class CalenderActivity extends AppCompatActivity implements View.OnLongCl
         year = (int) savedInstanceState.get("year");
         month = (int) savedInstanceState.get("month");
         setResult(year, month);
-    }
-
-    @Override
-    public boolean onLongClick(View v) {
-        switch (v.getId()) {
-            case R.id.next:
-                Toast.makeText(CalenderActivity.this, R.string.next_month, Toast.LENGTH_SHORT).show();
-                return true;
-            case R.id.prev:
-                Toast.makeText(CalenderActivity.this, R.string.prev_month, Toast.LENGTH_SHORT).show();
-                return true;
-        }
-        return false;
     }
 
 }

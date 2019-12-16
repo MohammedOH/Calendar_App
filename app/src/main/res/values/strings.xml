@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Discrete Project</string>
+    <string name="app_name">Discrete Mathematics Project</string>
     <string name="year">Year</string>
     <string name="month">Month</string>
     <string name="show_calender">Show Calender</string>
@@ -10,13 +10,14 @@
     <string name="th">Th</string>
     <string name="fr">Fr</string>
     <string name="sa">Sa</string>
-    <string name="next"><![CDATA[<]]></string>
-    <string name="prev"><![CDATA[>]]></string>
+    <string name="next" translatable="false"><![CDATA[<]]></string>
+    <string name="prev" translatable="false"><![CDATA[>]]></string>
     <string name="next_month">Next Month</string>
     <string name="prev_month">Previous Month</string>
     <string name="not_month">Invalid Month!</string>
     <string name="invalid_year"><![CDATA[Please Enter a year > 1800!]]></string>
     <string name="fill_fields">Please fill all fields!</string>
+    <string name="date_format" translatable="false">%d %s</string>
 
     <string-array name="months">
         <item>January</item>
