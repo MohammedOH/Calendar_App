@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">مشروع الرياضيات المتقطعة</string>
+    <string name="app_name">تقويمي</string>
     <string name="year">سنة</string>
     <string name="month">شهر</string>
     <string name="show_calender">إظهار التقوريم</string>

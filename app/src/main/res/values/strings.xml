@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Discrete Mathematics Project</string>
+    <string name="app_name">My Calender</string>
     <string name="year">Year</string>
     <string name="month">Month</string>
     <string name="show_calender">Show Calender</string>
