@@ -1,4 +1,4 @@
-package com.example.discreteproject;
+package com.example.discreteproject.activities;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -10,39 +10,61 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.discreteproject.listeners.OnSwipeTouchListener;
+import com.example.discreteproject.R;
+
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
 
-public class CalenderActivity extends AppCompatActivity {
+public class CalendarActivity extends AppCompatActivity {
 
+    // CONSTANTS
+    private static final String TABLE = "table";
+    private static final String YEAR = "year";
+    private static final String MONTH = "month";
+    private static final int START_DAY_FOR_JAN_1_1800 = 3;
+    // UI
     private TextView title;
     private TextView[][] tableUI;
+    // Current year and month
     private int year;
     private int month;
+    // Current calendar table
+    private int[][] currentTable;
+    // Months names
     private String[] months;
+    // Custom listener
     private OnSwipeTouchListener onSwipeTouchListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calender);
+
+        if (currentTable == null) {
+            currentTable = new int[6][7];
+            // Getting data from intent
+            Intent intent = getIntent();
+            year = intent.getIntExtra("year", 2019);
+            month = intent.getIntExtra("month", 1);
+            // Show final result
+            getTableOfMonth(year, month);
+        }
         // Inflating items
         inflateItems();
-        // Getting data from intent
-        Intent intent = getIntent();
-        year = intent.getIntExtra("year", 2019);
-        month = intent.getIntExtra("month", 1);
-        // Show final result
-        setResult(year, month);
-
+        // Setting result
+        title.setText(String.format(getResources().getString(R.string.date_format), year, getMonthName(month)));
+        setTableToUI(currentTable);
+        // Listeners
         findViewById(R.id.calender_table_layout).setOnTouchListener(onSwipeTouchListener);
         findViewById(R.id.activity).setOnTouchListener(onSwipeTouchListener);
-
-
-        assert getSupportActionBar() != null;   //null check
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);   //show back button
-
+        // Null check of ActionBar
+        if (getSupportActionBar() != null) {
+            //show back button
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     private void inflateItems() {
@@ -98,9 +120,6 @@ public class CalenderActivity extends AppCompatActivity {
         months = getResources().getStringArray(R.array.months);
         title = findViewById(R.id.title);
         onSwipeTouchListener = new OnSwipeTouchListener(this) {
-            @Override
-            public void onSwipeTop() {
-            }
 
             @Override
             public void onSwipeRight() {
@@ -122,50 +141,49 @@ public class CalenderActivity extends AppCompatActivity {
                 }
             }
 
-            @Override
-            public void onSwipeBottom() {
-            }
-
         };
     }
 
+    /* Clearing table */
+    private void emptyTable() {
+        for (int[] rows : currentTable) {
+            Arrays.fill(rows, 0);
+        }
+    }
+
+    /* Getting the table calendar of the month */
     private int[][] getTableOfMonth(int year, int month) {
-        int[][] monthBody = new int[6][7];
-        final int START_DAY_FOR_JAN_1_1800 = 3;
-
-
+        emptyTable();
         int totalNumberOfDays = 0;
-
-        // Get the total days from 1800 to 1/1/year
-        for (int i = 1800; i < year; i++)
+        // Get the total days from 1/ 1/ 1800 to 1 /1 /year
+        for (int i = 1800; i < year; i++) {
             if (isLeapYear(i))
                 totalNumberOfDays += 366;
             else
                 totalNumberOfDays += 365;
-
+        }
         // Add days from Jan to the month prior to the calendar month
-        for (int i = 1; i < month; i++)
+        for (int i = 1; i < month; i++) {
             totalNumberOfDays += getNumberOfDaysInMonth(year, i);
-
+        }
+        // Finding the first day of the week in the month
         int startDay = (totalNumberOfDays + START_DAY_FOR_JAN_1_1800) % 7;
-
+        // Total number of days in the month entered
         int numberOfDaysInMonth = getNumberOfDaysInMonth(year, month);
-        int j = 0;
-        int k = startDay;
-        for (int i = 1; i <= numberOfDaysInMonth; i++) {
-            monthBody[j % 6][k % 7] = i;
+        // Storing table into two dimensional array
+        for (int i = 1, j = 0, k = startDay; i <= numberOfDaysInMonth; i++) {
+            currentTable[j % 6][k % 7] = i;
             k++;
             if ((i + startDay) % 7 == 0) {
                 k = 0;
                 j++;
             }
         }
-        return monthBody;
+        return currentTable;
     }
 
     /* Determine if it is a leap year */
     private boolean isLeapYear(int year) {
-        /* Determine if it is a leap year */
         return (year % 4 == 0 && year % 100 != 0) || year % 400 == 0;
     }
 
@@ -177,16 +195,23 @@ public class CalenderActivity extends AppCompatActivity {
         if (month == 4 || month == 6 || month == 9 || month == 11)
             return 30;
         if (month == 2) return isLeapYear(year) ? 29 : 28;
-        return 0; // If month is incorrect
+        // If month is incorrect
+        return 0;
     }
 
-    private void setResultToUI(int[][] calenderTable) {
-        int currentYear = Integer.parseInt(new SimpleDateFormat("yyyy").format(new Date()));
-        int currentMonth = Integer.parseInt(new SimpleDateFormat("MM").format(new Date()));
-        int currentDay = Integer.parseInt(new SimpleDateFormat("dd").format(new Date()));
-
+    /* Setting result calendar table to the user interface table */
+    private void setTableToUI(int[][] calenderTable) {
+        // Getting current date
+        int longDate = Integer.parseInt(new SimpleDateFormat("yyyyMMdd").format(new Date()));
+        int currentDay = longDate % 100;
+        longDate /= 100;
+        int currentMonth = longDate % 100;
+        longDate /= 100;
+        int currentYear = longDate;
+        // Iterating over the UI table to set its result
         for (int i = 0; i < tableUI.length; i++) {
             for (int j = 0; j < tableUI[0].length; j++) {
+                // Ignore empty items
                 if (calenderTable[i][j] != 0) {
                     if (currentYear == year && currentMonth == month && currentDay == calenderTable[i][j]) {
                         tableUI[i][j].setBackgroundColor(Color.parseColor("#A6ECF5"));
@@ -201,6 +226,7 @@ public class CalenderActivity extends AppCompatActivity {
         }
     }
 
+    /* Setting next month of the current month */
     private void setNextMonth() {
         if (month == 12) {
             year++;
@@ -209,9 +235,10 @@ public class CalenderActivity extends AppCompatActivity {
             month++;
         }
         // Show final result
-        setResult(year, month);
+        setResult();
     }
 
+    /* Setting previous month of the current month */
     private void setPrevMonth() {
         if (month == 1) {
             year--;
@@ -220,7 +247,7 @@ public class CalenderActivity extends AppCompatActivity {
             month--;
         }
         // Show final result
-        setResult(year, month);
+        setResult();
     }
 
     /* Get the English name for the month */
@@ -228,24 +255,28 @@ public class CalenderActivity extends AppCompatActivity {
         return months[month - 1];
     }
 
-    public void setResult(int year, int month) {
-        setResultToUI(getTableOfMonth(year, month));
+    /* Setting both table and month title */
+    public void setResult() {
+        setTableToUI(getTableOfMonth(year, month));
         title.setText(String.format(getResources().getString(R.string.date_format), year, getMonthName(month)));
     }
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt("year", year);
-        outState.putInt("month", month);
+        outState.putSerializable(TABLE, currentTable);
+        outState.putInt(YEAR, year);
+        outState.putInt(MONTH, month);
     }
 
     @Override
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        year = (int) savedInstanceState.get("year");
-        month = (int) savedInstanceState.get("month");
-        setResult(year, month);
+        year = (int) savedInstanceState.get(YEAR);
+        month = (int) savedInstanceState.get(MONTH);
+        currentTable = (int[][]) savedInstanceState.getSerializable(TABLE);
+        setTableToUI(currentTable);
+        title.setText(String.format(getResources().getString(R.string.date_format), year, getMonthName(month)));
     }
 
 }

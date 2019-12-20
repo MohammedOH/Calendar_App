@@ -1,4 +1,4 @@
-package com.example.discreteproject;
+package com.example.discreteproject.helpers;
 
 import android.app.Activity;
 import android.content.Context;
@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 public class Helper {
 
+    /* This method hides the keyboard of the activity send to it as parameter */
     public static void hideKeyboard(Activity activity) {
         View view = activity.getCurrentFocus();
         if (view != null) {

@@ -1,4 +1,4 @@
-package com.example.discreteproject;
+package com.example.discreteproject.listeners;
 
 import android.content.Context;
 import android.view.GestureDetector;

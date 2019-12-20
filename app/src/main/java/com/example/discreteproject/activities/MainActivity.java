@@ -1,18 +1,16 @@
-package com.example.discreteproject;
+package com.example.discreteproject.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.discreteproject.R;
 import com.google.android.material.textfield.TextInputLayout;
 
-import static com.example.discreteproject.Helper.hideKeyboard;
+import static com.example.discreteproject.helpers.Helper.hideKeyboard;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -51,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (!validYear || !validMonth)
             return;
         // Start new Activity with the final data
-        Intent intent = new Intent(this, CalenderActivity.class);
+        Intent intent = new Intent(this, CalendarActivity.class);
         intent.putExtra("year", yearValue);
         intent.putExtra("month", monthValue);
         startActivity(intent);
@@ -60,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         monthTextInputLayout.getEditText().setText(null);
     }
 
+    /* Validating year */
     private boolean validYear(int year) {
         // Checking years value
         if (year < 1800) {
@@ -70,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return true;
     }
 
+    /* Validating month */
     private boolean validMonth(int month) {
         // Checking months value
         if (month < 1 || month > 12) {
@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return true;
     }
 
+    // Hides keyboard when touch the screen
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
